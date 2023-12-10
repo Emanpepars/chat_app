@@ -93,7 +93,7 @@ class ChatBubleFriend extends StatelessWidget {
     if (message.startsWith('http')) {
       // If it's a URL, display the image
       return Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.centerRight,
         child: Container(
           margin: EdgeInsets.symmetric(
             vertical: 15.h,
@@ -105,7 +105,7 @@ class ChatBubleFriend extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               topRight: Radius.circular(15),
               topLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
             ),
             boxShadow: [
               BoxShadow(
@@ -120,7 +120,7 @@ class ChatBubleFriend extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               topRight: Radius.circular(15),
               topLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
             ),
             child: Image.network(
               message,
@@ -147,7 +147,7 @@ class ChatBubleFriend extends StatelessWidget {
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(15),
               topLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
             ),
           ),
           child: Text(

@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text(
-          'chatty',
+          'Chat',
           style: GoogleFonts.poppins(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,
