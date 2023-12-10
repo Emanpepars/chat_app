@@ -69,7 +69,7 @@ class ChatCard extends StatelessWidget {
               children: [
                 Text(
                   userModel.name,
-                  // style: poppins18W500(),
+                  style: poppins16W500black(),
                 ),
                 const SizedBox(
                   height: 2,

@@ -132,14 +132,7 @@ class ProfileScreen extends StatelessWidget {
                     textInputAction: TextInputAction.done,
                   ),
                   SizedBox(height: 16.h),
-                  const Text('Email'),
-                  SizedBox(height: 10.h),
-                  defaultFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.done,
-                    controller: profileProvider.emailController
-                      ..text = user.email,
-                  ),
+
                   SizedBox(height: 16.h),
                   const Text('Phone'),
                   SizedBox(height: 10.h),

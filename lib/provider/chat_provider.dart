@@ -12,24 +12,27 @@ class ChatProvider extends ChangeNotifier {
   final controller = ScrollController();
 
   void addMessageFireBase(String value, args) {
-    getMessageCollection();
+    if (messageController.text != ""){
+      getMessageCollection();
 
-    addMessage(
-      MessageModel(
-        message: value,
-        date: DateTime.now(),
-        id: args.id,
-        userId: FirebaseAuth.instance.currentUser!.uid,
-        friendId: args.id,
-      ),
-    );
+      addMessage(
+        MessageModel(
+          message: value,
+          date: DateTime.now(),
+          id: args.id,
+          userId: FirebaseAuth.instance.currentUser!.uid,
+          friendId: args.id,
+        ),
+      );
 
-    sendNotification(args.pushToken,
-        FirebaseAuth.instance.currentUser!.email ?? "", messageController.text);
-    messageController.clear();
-    controller.animateTo(0,
-        duration: const Duration(seconds: 2), curve: Curves.easeIn);
-    notifyListeners();
+      sendNotification(args.pushToken,
+          FirebaseAuth.instance.currentUser!.email ?? "", messageController.text);
+      messageController.clear();
+      controller.animateTo(0,
+          duration: const Duration(seconds: 2), curve: Curves.easeIn);
+      notifyListeners();
+    }
+
   }
 
   CollectionReference<MessageModel> getMessageCollection() {
@@ -50,6 +53,16 @@ class ChatProvider extends ChangeNotifier {
   Stream<QuerySnapshot<MessageModel>> getMessagesFromFireStore() {
     var collection = getMessageCollection();
     return collection.orderBy("date", descending: true).snapshots();
+  }
+
+  Stream<QuerySnapshot<MessageModel>> getLastMessagesFromFireStore(
+      friendId, userId) {
+    var collection = getMessageCollection();
+    return collection
+        .where("friendId", isEqualTo: friendId)
+        .where("userId", isEqualTo: userId)
+        .limit(1)
+        .snapshots();
   }
 
   updateMessage(String id, MessageModel message) {

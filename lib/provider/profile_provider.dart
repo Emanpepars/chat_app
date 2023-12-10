@@ -29,7 +29,7 @@ class ProfileProvider extends ChangeNotifier {
     updateUserProfile(
       user.id,
       nameController.text,
-      emailController.text,
+      user.email,
       phoneController.text,
       user.image,
     );
@@ -39,9 +39,9 @@ class ProfileProvider extends ChangeNotifier {
   void updateUserImage(UserModel user) {
     updateUserProfile(
       user.id,
-      nameController.text,
-      emailController.text,
-      phoneController.text,
+      user.name,
+      user.email,
+      user.phone,
       imageUrl ?? user.image,
     );
     notifyListeners();

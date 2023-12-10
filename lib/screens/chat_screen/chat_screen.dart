@@ -8,6 +8,7 @@ import '../../models/user_model.dart';
 import '../../provider/chat_provider.dart';
 import '../../reusable/utils/App_styles.dart';
 import '../../reusable/utils/app_colors.dart';
+import '../../reusable/utils/app_components.dart';
 import '../../reusable/widget/message.dart';
 import '../friend_profile/friend_profile.dart';
 
@@ -49,8 +50,6 @@ class ChatScreen extends StatelessWidget {
               radius: 20,
             ),
           ),
-
-
           SizedBox(
             width: 10.w,
           ),
@@ -105,29 +104,109 @@ class ChatScreen extends StatelessWidget {
             SizedBox(
               height: 10.h,
             ),
-            TextField(
-              controller: chatProvider.messageController,
-              onSubmitted: (value) {
-                chatProvider.addMessageFireBase(value, args);
-              },
-              cursorColor: AppColors.primary,
-              decoration: InputDecoration(
-                hintText: "send Message",
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      chatProvider.addMessageFireBase(
-                          chatProvider.messageController.text, args);
-                    },
-                    icon: const Icon(Icons.send, color: AppColors.primary)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
+            SizedBox(
+              height: 65.h,
+              width: 1000.w,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: TextField(
+                      controller: chatProvider.messageController,
+                      onSubmitted: (value) {
+                        chatProvider.addMessageFireBase(value, args);
+                      },
+                      cursorColor: AppColors.primary,
+                      decoration: InputDecoration(
+                        hintText: "send Message",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 200,
+                                  color: Colors.white,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 10.h,
+                                  ),
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 10.h,
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        MyButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: 'Take Photo',
+                                          sizeBoxHeight: 50.h,
+                                        ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        MyButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: 'Choose Photo',
+                                          sizeBoxHeight: 50.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.image,
+                            color: AppColors.primary,
+                          ),
+                          iconSize: 35.sp,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12.sp),
+                        ),
+                      ),
+                      margin: EdgeInsets.only(left: 10.w ),
+                      child: IconButton(
+                        onPressed: () {
+
+                          chatProvider.addMessageFireBase(
+                              chatProvider.messageController.text, args);
+                        },
+                        icon: Icon(
+                          Icons.send,
+                          color: AppColors.onPrimary,
+                          size: 25.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
