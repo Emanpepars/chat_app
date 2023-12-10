@@ -1,18 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../models/message_model.dart';
 
 class ChatProvider extends ChangeNotifier {
   var messageController = TextEditingController();
   final controller = ScrollController();
+  File? img;
+
+  late String imageUrl;
 
   void addMessageFireBase(String value, args) {
-    if (messageController.text != ""){
+    if (messageController.text != "") {
       getMessageCollection();
 
       addMessage(
@@ -25,14 +31,15 @@ class ChatProvider extends ChangeNotifier {
         ),
       );
 
-      sendNotification(args.pushToken,
-          FirebaseAuth.instance.currentUser!.email ?? "", messageController.text);
+      sendNotification(
+          args.pushToken,
+          FirebaseAuth.instance.currentUser!.email ?? "",
+          messageController.text);
       messageController.clear();
       controller.animateTo(0,
           duration: const Duration(seconds: 2), curve: Curves.easeIn);
       notifyListeners();
     }
-
   }
 
   CollectionReference<MessageModel> getMessageCollection() {
@@ -116,6 +123,79 @@ class ChatProvider extends ChangeNotifier {
     } else {
       print('Failed to send notification. Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
+    }
+  }
+
+  void pickImage(args) async {
+    var image = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      img = File(image.path);
+      notifyListeners();
+      addImageFireBase(img!, args);
+    }
+  }
+
+  Future<void> getImage(args) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      img = File(pickedFile.path);
+      notifyListeners();
+
+      addImageFireBase(img!,args);
+    }
+  }
+
+  void addImageFireBase(File image, args) {
+    getMessageCollection();
+
+    uploadImageToFirebaseStorage(image).then((imageUrl) {
+      print(imageUrl);
+      print(image);
+      print(img);
+      addMessage(
+        MessageModel(
+          message: imageUrl,
+          date: DateTime.now(),
+          id: args.id,
+          userId: FirebaseAuth.instance.currentUser!.uid,
+          friendId: args.id,
+        ),
+      );
+
+      print("object");
+      sendNotification(
+        args.pushToken,
+        FirebaseAuth.instance.currentUser!.email ?? "",
+        imageUrl,
+      );
+
+      controller.animateTo(0,
+          duration: const Duration(seconds: 2), curve: Curves.easeIn);
+      notifyListeners();
+    });
+  }
+
+  Future<String> uploadImageToFirebaseStorage(File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      firebase_storage.Reference firebaseStorageRef =
+          firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+      firebase_storage.UploadTask uploadTask =
+          firebaseStorageRef.putFile(image);
+
+      // Use 'then' to get the imageUrl after the upload is complete
+      String imageUrl = await uploadTask.then((taskSnapshot) async {
+        return await firebaseStorageRef.getDownloadURL();
+      });
+
+      print("Image uploaded to Firebase Storage: $imageUrl");
+      return imageUrl; // Return the imageUrl in the success case
+    } catch (error) {
+      print("Error uploading image to Firebase Storage: $error");
+      return ""; // Return an empty string in case of an error
     }
   }
 }

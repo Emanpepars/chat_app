@@ -35,7 +35,6 @@ class ProfileProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
-
   void updateUserImage(UserModel user) {
     updateUserProfile(
       user.id,

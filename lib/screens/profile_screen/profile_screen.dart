@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         //  automaticallyImplyLeading: false,
         title: Text(
-          "Hello ${initUserProvider.userModel?.name}",
+          "${initUserProvider.userModel?.name}",
           style: poppins20W600(AppColors.primary),
         ),
         centerTitle: true,
@@ -36,7 +36,9 @@ class ProfileScreen extends StatelessWidget {
         future: LoginProvider.readUser(FirebaseAuth.instance.currentUser!.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (!snapshot.hasData || snapshot.data == null) {
@@ -132,7 +134,6 @@ class ProfileScreen extends StatelessWidget {
                     textInputAction: TextInputAction.done,
                   ),
                   SizedBox(height: 16.h),
-
                   SizedBox(height: 16.h),
                   const Text('Phone'),
                   SizedBox(height: 10.h),
@@ -144,15 +145,16 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 30.h),
                   MyButton(
-                      onPressed: () {
-                        profileProvider.updateUserProfileInfo(user);
-                        //print("success message");
-                        initUserProvider.initUser();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Updated Successfully")),
-                        );
-                      },
-                      text: 'Update Profile'),
+                    onPressed: () {
+                      profileProvider.updateUserProfileInfo(user);
+                      //print("success message");
+                      initUserProvider.initUser();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Updated Successfully")),
+                      );
+                    },
+                    text: 'Update Profile',
+                  ),
                 ],
               ),
             ),

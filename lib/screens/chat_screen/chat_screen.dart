@@ -19,7 +19,7 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var chatProvider = Provider.of<ChatProvider>(context);
+    var chatProvider = Provider.of<ChatProvider>(context , listen: false);
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: AppColors.primary),
@@ -105,7 +105,7 @@ class ChatScreen extends StatelessWidget {
               height: 10.h,
             ),
             SizedBox(
-              height: 65.h,
+              height: 70.h,
               width: 1000.w,
               child: Row(
                 children: [
@@ -121,6 +121,7 @@ class ChatScreen extends StatelessWidget {
                         hintText: "send Message",
                         suffixIcon: IconButton(
                           onPressed: () {
+
                             showModalBottomSheet(
                               context: context,
                               builder: (BuildContext context) {
@@ -141,6 +142,8 @@ class ChatScreen extends StatelessWidget {
                                       children: [
                                         MyButton(
                                           onPressed: () {
+                                            chatProvider.pickImage(args);
+
                                             Navigator.pop(context);
                                           },
                                           text: 'Take Photo',
@@ -151,6 +154,7 @@ class ChatScreen extends StatelessWidget {
                                         ),
                                         MyButton(
                                           onPressed: () {
+                                            chatProvider.getImage(args);
                                             Navigator.pop(context);
                                           },
                                           text: 'Choose Photo',
@@ -164,7 +168,7 @@ class ChatScreen extends StatelessWidget {
                             );
                           },
                           icon: const Icon(
-                            Icons.image,
+                            Icons.image_outlined,
                             color: AppColors.primary,
                           ),
                           iconSize: 35.sp,
@@ -188,13 +192,12 @@ class ChatScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primary,
                         borderRadius: BorderRadius.all(
-                          Radius.circular(12.sp),
+                          Radius.circular(35.sp),
                         ),
                       ),
-                      margin: EdgeInsets.only(left: 10.w ),
+                      margin: EdgeInsets.only(left: 10.w),
                       child: IconButton(
                         onPressed: () {
-
                           chatProvider.addMessageFireBase(
                               chatProvider.messageController.text, args);
                         },
